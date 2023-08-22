@@ -213,41 +213,42 @@
                     const ID = document.getElementById('ID').value;
     
                     try {
-                        const userLocation = await getCurrentLocation();
-                        const classLocation = { latitude: 30.0554518, longitude: 31.1869531 }; // Replace with actual class location
+                        window.location.href = 'selfie';
+                        // const userLocation = await getCurrentLocation();
+                        // const classLocation = { latitude: 30.0554518, longitude: 31.1869531 }; // Replace with actual class location
     
-                        const isInClass = isLocationWithinRange(userLocation, classLocation);
+                        // const isInClass = isLocationWithinRange(userLocation, classLocation);
     
-                        if (isInClass) {
-                            window.location.href = 'selfie';
-                        } else {
-                            alert('Verification denied. Please try again from the class location.');
-                        }
+                        // if (isInClass) {
+                        //     window.location.href = 'selfie';
+                        // } else {
+                        //     alert('Verification denied. Please try again from the class location.');
+                        // }
                     } catch (error) {
                         console.error('Error getting user location:', error);
                     }
                 });
     
-                async function getCurrentLocation() {
-                    return new Promise((resolve, reject) => {
-                        if ('geolocation' in navigator) {
-                            navigator.geolocation.getCurrentPosition(
-                                position => resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude }),
-                                error => reject(error)
-                            );
-                        } else {
-                            reject('Geolocation is not available in this browser.');
-                        }
-                    });
-                }
+                // async function getCurrentLocation() {
+                //     return new Promise((resolve, reject) => {
+                //         if ('geolocation' in navigator) {
+                //             navigator.geolocation.getCurrentPosition(
+                //                 position => resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude }),
+                //                 error => reject(error)
+                //             );
+                //         } else {
+                //             reject('Geolocation is not available in this browser.');
+                //         }
+                //     });
+                // }
     
-                function isLocationWithinRange(userLocation, classLocation) {
-                    const distanceThreshold = 0.1; // Adjust this value as needed (in degrees)
-                    const latDiff = Math.abs(userLocation.latitude - classLocation.latitude);
-                    const lonDiff = Math.abs(userLocation.longitude - classLocation.longitude);
+                // function isLocationWithinRange(userLocation, classLocation) {
+                //     const distanceThreshold = 0.1; // Adjust this value as needed (in degrees)
+                //     const latDiff = Math.abs(userLocation.latitude - classLocation.latitude);
+                //     const lonDiff = Math.abs(userLocation.longitude - classLocation.longitude);
                     
-                    return latDiff <= distanceThreshold && lonDiff <= distanceThreshold;
-                }
+                //     return latDiff <= distanceThreshold && lonDiff <= distanceThreshold;
+                // }
             });
         </script>
     

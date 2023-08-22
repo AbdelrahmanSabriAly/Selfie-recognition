@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <style>
+    <style>
         *
         {
             margin:0;
@@ -210,7 +210,7 @@
             object-fit: cover;
         }
 
-    </style> -->
+    </style>
     <title>Face Recognition</title>
 </head>
 <body>
@@ -219,8 +219,9 @@
             <h2>Face Recognition</h2>
             <p>Please take a selfie of your cute face</p>
             <div class="camera-container">
-                <video id="cameraFeed" autoplay></video>
+                <video id="cameraFeed" autoplay muted playsinline></video>
             </div>
+            
             <button id="recognizeBtn">Recognize</button>
             <h3 id="welcomeMessage"></h3>
 
