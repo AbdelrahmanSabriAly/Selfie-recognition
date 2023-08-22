@@ -4,10 +4,7 @@ import base64
 import numpy as np
 
 from FaceRecog import Process_Frames
-
 app = Flask(__name__)
-
-
 
 @app.route('/')
 def index():
@@ -15,7 +12,7 @@ def index():
 
 @app.route('/selfie')
 def selfie():
-    return render_template('face-recognition.html') 
+    return render_template('face-recognition.html')
 
 @app.route('/recognize', methods=['POST'])
 def recognize():
