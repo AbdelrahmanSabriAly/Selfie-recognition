@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *
+        {
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: 'Poppins',sans-serif;
+
+        }
+
+        body
+        {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #23242a;
+
+        }
+        .box
+        {
+            position: relative;
+            width: 380px;
+            height: 420px;
+            background: #1c1c1c;
+            border-radius: 8px;
+            overflow: hidden;
+
+        }
+        .box::before
+        {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 380px;
+            height: 420px;
+            background: linear-gradient(0deg,transparent,#45f3ff,#45f3ff,#45f3ff);
+            z-index: 1;
+            transform-origin: bottom right;
+            animation: animate 6s linear infinite;
+        }
+        .box::after
+        {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 380px;
+            height: 420px;
+            background: linear-gradient(0deg,transparent,#d9138a,#d9138a,#d9138a);
+            z-index: 1;
+            transform-origin: bottom right;
+            animation: animate 6s linear infinite;
+            animation-delay: -3s;
+        }
+
+        @keyframes animate
+        {
+            0%
+            {
+                transform: rotate(0deg);
+
+            }
+            100%
+            {
+                transform: rotate(360deg);
+            }
+        }
+        .box form 
+        {
+            position: absolute;
+            inset: 4px;
+            background: #222;
+            padding: 50px 40px;
+            border-radius: 8px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            
+
+        }
+
+        .box form h2
+        {
+            color: #45f3ff;
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: 0.1em;
+
+        }
+        .box form p
+        {
+            color: white;
+            font-weight: 800;
+            margin-top: 20px;
+
+        }
+        #imageInput {
+        color: white; /* Change this to your desired font color */
+        margin-top: 20px; /* Change this to your desired margin value */
+        }
+        .box form .inputBox
+        {
+            position: relative;
+            width: 300px;
+            margin-top: 35px;
+        }
+        .box form .inputBox input
+        {
+            position: relative;
+            width: 100%;
+            padding: 20px 10px 10px;
+            background: transparent;
+            outline: none;
+            border: none;
+            box-shadow: none;
+            color: #23242a;
+            font-size: 1em;
+            letter-spacing: 0.05em;
+            transition: 0.5s;
+            z-index: 8;
+        }
+        .box form .inputBox span
+        {
+            position: absolute;
+            left: 0;
+            padding: 20px 0px 10px;
+            pointer-events: none;
+            color: #8f8f8f;
+            font-size: 1em;
+            letter-spacing: 0.05em;
+            transition: 0.5s;
+
+        }
+        .box form .inputBox input:valid ~ span,
+        .box form .inputBox input:focus ~ span
+        {
+            color: #45f3ff;
+            font-size: 0.75em;
+            transform: translateY(-34px)
+        }
+
+        .box form .inputBox i
+        {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 2px;
+            width: 100%;
+            background: #45f3ff;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: 0.5s;
+            pointer-events: none;
+        }
+        .box form .inputBox input:valid ~ i,
+        .box form .inputBox input:focus ~ i
+        {
+            height: 44px;
+        }
+        button
+        {
+            border: none;
+            outline: none;
+            padding: 9px 25px;
+            background: #45f3ff;
+            cursor: pointer;
+            font-size: 0.9em;
+            border-radius: 4px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:active
+        {
+            opacity: 0.8;
+        }
+
+
+
+
+
+
+    </style>
+    <title>Face Recognition</title>
+</head>
+<body>
+    <div class="box">
+        <form id="FaceRecog">
+            <h2>Face Recognition</h2>
+            <p>Please take a selfie of your cute face</p>
+            <input type="file" id="imageInput" accept="image/*">
+            <button id="recognizeBtn">Recognize</button>
+            <p id="welcomeMessage"></p>
+
+        </form>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageInput = document.getElementById('imageInput');
+            const recognizeBtn = document.getElementById('recognizeBtn');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+
+            recognizeBtn.addEventListener('click', function() {
+                event.preventDefault(); // Prevent default form submission
+                console.log("Button clicked");
+                if (imageInput.files.length > 0) {
+                    const uploadedImage = imageInput.files[0];
+                    const formData = new FormData();
+                    formData.append('image', uploadedImage);
+
+                    fetch('/recognize', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.label) {
+                            welcomeMessage.textContent = 'Welcome ' + data.label;
+                        } else {
+                            welcomeMessage.textContent = 'Recognition failed. Try again.';
+                        }
+                    })
+                    .catch(error => console.error('Recognition error:', error));
+                }
+            });
+        });
+    </script>
+</body>
+</html>

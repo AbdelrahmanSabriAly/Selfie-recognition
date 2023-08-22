@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #1F1F1F;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            color: #f2f2f2;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            color: #f2f2f2;
+        }
+
+        button {
+            background-color: #00F8F8;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <title>Login Page</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Login Page</h1>
+        <form id="loginForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+            <label for="ID">ID:</label>
+            <input type="text" id="ID" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            
+            loginForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const ID = document.getElementById('ID').value;
+
+                try {
+                    const userLocation = await getCurrentLocation();
+                    const classLocation = { latitude: 30.0554518, longitude: 31.1869531 }; // Replace with actual class location
+
+                    const isInClass = isLocationWithinRange(userLocation, classLocation);
+
+                    if (isInClass) {
+                        window.location.href = 'selfie';
+                    } else {
+                        alert('Verification denied. Please try again from the class location.');
+                    }
+                } catch (error) {
+                    console.error('Error getting user location:', error);
+                }
+            });
+
+            async function getCurrentLocation() {
+                return new Promise((resolve, reject) => {
+                    if ('geolocation' in navigator) {
+                        navigator.geolocation.getCurrentPosition(
+                            position => resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude }),
+                            error => reject(error)
+                        );
+                    } else {
+                        reject('Geolocation is not available in this browser.');
+                    }
+                });
+            }
+
+            function isLocationWithinRange(userLocation, classLocation) {
+                const distanceThreshold = 0.1; // Adjust this value as needed (in degrees)
+                const latDiff = Math.abs(userLocation.latitude - classLocation.latitude);
+                const lonDiff = Math.abs(userLocation.longitude - classLocation.longitude);
+                
+                return latDiff <= distanceThreshold && lonDiff <= distanceThreshold;
+            }
+        });
+    </script>
+</body>
+</html>
