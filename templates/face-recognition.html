@@ -86,6 +86,8 @@
 
         }
 
+        
+
         .box form h2
         {
             color: #45f3ff;
@@ -94,6 +96,16 @@
             letter-spacing: 0.1em;
 
         }
+
+        .box form h3
+        {
+            color: #45f3ff;
+            font-weight: 600;
+            margin-top: 6px;
+            text-align: center;
+
+        }
+
         .box form p
         {
             color: white;
@@ -198,9 +210,6 @@
             object-fit: cover;
         }
 
-
-
-
     </style>
     <title>Face Recognition</title>
 </head>
@@ -213,7 +222,7 @@
                 <video id="cameraFeed" autoplay></video>
             </div>
             <button id="recognizeBtn">Recognize</button>
-            <p id="welcomeMessage"></p>
+            <h3 id="welcomeMessage"></h3>
 
         </form>
 
@@ -221,32 +230,43 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const cameraFeed = document.getElementById('cameraFeed');
-            const cameraContainer = document.querySelector('.camera-container');
-            const recognizeBtn = document.getElementById('recognizeBtn');
-            const welcomeMessage = document.getElementById('welcomeMessage');
+    // Get references to DOM elements
+    const cameraFeed = document.getElementById('cameraFeed');
+    const cameraContainer = document.querySelector('.camera-container');
+    const recognizeBtn = document.getElementById('recognizeBtn');
+    const welcomeMessage = document.getElementById('welcomeMessage');
 
-            const aspectRatio = 4 / 3; // Set the desired aspect ratio
-            const boxWidth = cameraContainer.clientWidth;
-            const boxHeight = boxWidth / aspectRatio;
+    // Set the desired aspect ratio (4:3)
+    const aspectRatio = 4 / 3;
 
-            cameraContainer.style.height = `${boxHeight}px`; // Set container height
+    // Function to calculate and set the container's height based on aspect ratio
+    function adjustCameraContainerSize() {
+        const screenWidth = window.innerWidth;
+        const containerHeight = screenWidth / aspectRatio;
+        cameraContainer.style.height = `${containerHeight}px`;
+    }
 
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => {
-                    cameraFeed.srcObject = stream;
-                })
-                .catch(error => console.error('Camera access error:', error));
+    // Call the function initially and on window resize
+    adjustCameraContainerSize();
+    window.addEventListener('resize', adjustCameraContainerSize);
 
+    // Access the user's camera and set the stream as the video source
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            cameraFeed.srcObject = stream;
+        })
+        .catch(error => console.error('Camera access error:', error));
 
+    // Attach a click event handler to the "Recognize" button
+    recognizeBtn.addEventListener('click', function(event) {
+        event.preventDefault();
 
-            recognizeBtn.addEventListener('click', function() {
-                event.preventDefault();
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.width = cameraFeed.videoWidth;
-                canvas.height = cameraFeed.videoHeight;
-                context.drawImage(cameraFeed, 0, 0, canvas.width, canvas.height);
+        // Create a canvas and draw the camera feed onto it
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = cameraFeed.videoWidth;
+        canvas.height = cameraFeed.videoHeight;
+        context.drawImage(cameraFeed, 0, 0, canvas.width, canvas.height);
 
                 canvas.toBlob(function(blob) {
                     const MAX_IMAGE_SIZE = 100 * 1024; // 100KB in bytes
