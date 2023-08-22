@@ -183,7 +183,20 @@
             opacity: 0.8;
         }
 
-
+        .camera-container {
+            position: relative;
+            width: 100%; /* Adjust the width as needed */
+            height: 0;
+            padding-bottom: 75%; /* 4:3 aspect ratio */
+            overflow: hidden;
+            margin-bottom: 10px; /* Add some margin to separate camera from button */
+        }
+        #cameraFeed {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
 
 
@@ -196,7 +209,9 @@
         <form id="FaceRecog">
             <h2>Face Recognition</h2>
             <p>Please take a selfie of your cute face</p>
-            <video id="cameraFeed" autoplay></video> <!-- New video element for camera feed -->
+            <div class="camera-container">
+                <video id="cameraFeed" autoplay></video>
+            </div>
             <button id="recognizeBtn">Recognize</button>
             <p id="welcomeMessage"></p>
 
@@ -207,15 +222,23 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cameraFeed = document.getElementById('cameraFeed');
+            const cameraContainer = document.querySelector('.camera-container');
             const recognizeBtn = document.getElementById('recognizeBtn');
             const welcomeMessage = document.getElementById('welcomeMessage');
 
-            // Get user media and show camera feed
+            const aspectRatio = 4 / 3; // Set the desired aspect ratio
+            const boxWidth = cameraContainer.clientWidth;
+            const boxHeight = boxWidth / aspectRatio;
+
+            cameraContainer.style.height = `${boxHeight}px`; // Set container height
+
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(stream => {
                     cameraFeed.srcObject = stream;
                 })
                 .catch(error => console.error('Camera access error:', error));
+
+
 
             recognizeBtn.addEventListener('click', function() {
                 event.preventDefault();
